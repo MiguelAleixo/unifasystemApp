@@ -1,15 +1,14 @@
-// import React, { Component } from 'react';
-// import { View, Text, StatusBar } from 'react-native';
+import List from './src/list/List.js';
+import Info from './src/info/Info.js';
 
-// export default class App extends React.Component {
-//   render() {
-//     return (
-//       <>
-//       <StatusBar backgroundColor="#c56000" barStyle="light-content"/>
-//       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//         <Text style={{ fontSize: 30, fontWeight: '500', color: '#ff8f00' }}>CRUD USUARIO</Text>
-//       </View>
-//       </>
-//     );
-//   }
-// }
+import { createAppContainer, createStackNavigator } from 'react-navigation';
+
+
+const Routes = createAppContainer(
+  createStackNavigator({
+    Home: Info,
+    About: List
+  })
+);
+
+export default Routes;
