@@ -1,14 +1,20 @@
-import List from './src/list/List.js';
-import Info from './src/info/Info.js';
+import * as React from 'react';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import Routes from './src/routes';
 
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+const theme = {
+  ...DefaultTheme,
+  color: {
+    ...DefaultTheme.colors,
+    primary: 'red',
+    accent: '#F50057'
+  }
+}
 
-
-const Routes = createAppContainer(
-  createStackNavigator({
-    Home: Info,
-    About: List
-  })
-);
-
-export default Routes;
+export default function Main() {
+  return (
+    <PaperProvider theme={theme}>
+      <Routes />
+    </PaperProvider>
+  );
+}

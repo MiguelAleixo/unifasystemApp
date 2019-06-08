@@ -23,7 +23,7 @@ export default class Info extends React.Component {
   };
 
   render() {
-    const { navigate } = this.props.navigation;
+    // const { navigate } = this.props.navigation;
 
     return (
       // <KeyboardAvoidingView style={styles.wrapper}>
