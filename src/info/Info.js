@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, Alert, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import navigation from 'react-navigation';
-import { TextInput, Button, HelperText, TextInputMask } from 'react-native-paper';
+import { TextInput, Button, HelperText } from 'react-native-paper';
+import { TextInputMask } from 'react-native-masked-text'
 
 export default class Info extends Component {
 
@@ -9,10 +10,11 @@ export default class Info extends Component {
     super(props)
     this.state = {
       nome: '',
-      cpf: '456.869.008-09',
-      dataNascimento: '01/12/1999',
+      cpf: '',
+      dataNascimento: '',
       cidade: '',
-      curso: ''
+      curso: '',
+      international: ''
     };
   }
 
@@ -33,18 +35,15 @@ export default class Info extends Component {
         keyboardShouldPersistTaps={'always'}
         removeClippedSubviews={false}
       >
-       
-        <View style={styles.inputContainerStyle}>
-          <TextInput
-            mode="outlined"
-            label="Nome"
-            value={this.state.nome}
-            onChangeText={nome => this.setState({ nome })}
-          />
-          <HelperText type="info">
-            Digite o nome completo
-            </HelperText>
-        </View>
+
+
+        <TextInput
+          mode="outlined"
+          label="Nome"
+          style={styles.input}
+          value={this.state.nome}
+          onChangeText={nome => this.setState({ nome })}
+        />
 
         <View style={styles.inputContainerStyle}>
           <TextInput
@@ -53,6 +52,13 @@ export default class Info extends Component {
             value={this.state.cpf}
             error={!this._isCPFValid()}
             onChangeText={cpf => this.setState({ cpf })}
+            render={
+              props =>
+                <TextInputMask
+                  {...props}
+                  type={'cpf'}
+                />
+            }
           />
           <HelperText type="error" visible={!this._isCPFValid()}>
             Digite um CPF válido
@@ -66,6 +72,16 @@ export default class Info extends Component {
             value={this.state.dataNascimento}
             error={!this._isDateValid()}
             onChangeText={dataNascimento => this.setState({ dataNascimento })}
+            render={
+              props =>
+                <TextInputMask
+                  {...props}
+                  type={'datetime'}
+                  options={{
+                    format: 'DD/MM/YYYY'
+                  }}
+                />
+            }
           />
           <HelperText type="error" visible={!this._isDateValid()}>
             Digite uma data válida
@@ -121,7 +137,16 @@ const styles = StyleSheet.create({
     margin: 40
   },
   inputContainerStyle: {
-    margin: 8,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 2,
+    marginBottom: 2
+  },
+  input: {
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 26,
+    marginBottom: 26
   },
   button: {
     margin: 8
