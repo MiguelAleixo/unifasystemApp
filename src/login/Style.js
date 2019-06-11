@@ -4,7 +4,7 @@ const loginStyle = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 16,
+        padding: 8,
     },
     imageProfile: {
         width: '100%',
