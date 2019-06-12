@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Alert, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Alert, StyleSheet, KeyboardAvoidingView, ScrollView, Picker, AsyncStorage } from 'react-native';
 import navigation from 'react-navigation';
 import { TextInput, Button, HelperText } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text'
@@ -13,13 +13,26 @@ export default class Info extends Component {
       cpf: '',
       dataNascimento: '',
       cidade: '',
-      curso: '',
-      international: ''
+      curso: ''
     };
   }
 
   _isCPFValid = () => /[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/.test(this.state.cpf);
   _isDateValid = () => /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.state.dataNascimento);
+
+  onSubmit = async() => {
+    Alert.alert(JSON.stringify(this.state))
+    try {
+      // const {produto,quantidade} = this.state;
+      // var p = {produto: produto, quantidade: quantidade};
+      // global.dados.push(this.state);
+
+      await AsyncStorage.setItem('data', JSON.stringify(this.state));
+      // this.props.navigation.navigate('Consulta',{});
+    } catch (e) {
+      console.error('Falha ao salvar dados');
+    }
+  }
 
   onSubmit() {
     Alert.alert(JSON.stringify(this.state))
@@ -35,7 +48,6 @@ export default class Info extends Component {
         keyboardShouldPersistTaps={'always'}
         removeClippedSubviews={false}
       >
-
 
         <TextInput
           mode="outlined"
@@ -88,31 +100,19 @@ export default class Info extends Component {
             </HelperText>
         </View>
 
-        <View style={styles.inputContainerStyle}>
-          <TextInput
-            mode="outlined"
-            label="Cidade"
-            value={this.state.cidade}
-            onChangeText={cidade => this.setState({ cidade })}
-          />
-          <HelperText type="info">
-            Escolha a cidade
-            </HelperText>
-        </View>
+        <Picker
+          selectedValue={this.state.curso}
+          style={styles.input}
+          onValueChange={ curso =>
+            this.setState({ curso })
+          }>
+          <Picker.Item label="Sistemas de informação" value="1" />
+          <Picker.Item label="Engenharia de software" value="2" />
+          <Picker.Item label="Letras" value="3" />
+          <Picker.Item label="Psicologia" value="4" />
+        </Picker>
 
-        <View style={styles.inputContainerStyle}>
-          <TextInput
-            mode="outlined"
-            label="Curso"
-            value={this.state.curso}
-            onChangeText={curso => this.setState({ curso })}
-          />
-          <HelperText type="info">
-            Escolha o curso
-            </HelperText>
-        </View>
-
-        <Button mode="contained" onPress={() => this.onSubmit()} style={styles.button}>
+        <Button mode="contained" onPress={this.onSubmit.bind(this)} style={styles.button}>
           Cadastrar
         </Button>
       </ScrollView >
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   input: {
     marginLeft: 8,
     marginRight: 8,
-    marginTop: 26,
+    marginTop: 2,
     marginBottom: 26
   },
   button: {
