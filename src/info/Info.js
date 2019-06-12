@@ -27,10 +27,10 @@ export default class Info extends Component {
     this.state.user.push(this.state.info);
     let dados = this.state.user;
     console.warn(dados)
+
     try {
       await AsyncStorage.setItem('dados', JSON.stringify(dados));
-      this.props.navigation.navigate('List',{});
-
+      this.props.navigation.navigate('List');
     } catch (e) {
       console.error('Falha ao salvar dados');
     }
@@ -93,10 +93,10 @@ export default class Info extends Component {
           onValueChange={curso =>
             this.setState({ info: { ...this.state.info, curso: curso } })
           }>
-          <Picker.Item label="Sistemas de informação" value="1" />
-          <Picker.Item label="Engenharia de software" value="2" />
-          <Picker.Item label="Letras" value="3" />
-          <Picker.Item label="Psicologia" value="4" />
+          <Picker.Item label="Sistemas de informação" value="Sistemas de informação" />
+          <Picker.Item label="Engenharia de software" value="Engenharia de software" />
+          <Picker.Item label="Letras" value="Letras" />
+          <Picker.Item label="Psicologia" value="Psicologia" />
         </Picker>
       </ScrollView >
     );
@@ -115,9 +115,11 @@ export default class Info extends Component {
     return (
       <View style={{ flex: 1 }}>
         <Appbar.Header style={{ backgroundColor: '#3F51B5' }}>
-          <Appbar.Action icon="menu" />
+        <Appbar.BackAction
+          onPress={() => this.props.navigation.navigate('List')}
+        />
           <Appbar.Content
-            title="Lista de alunos"
+            title="Novo aluno"
           />
           <Avatar.Image size={40} source={require('../assets/indiano-google.jpg')} />
         </Appbar.Header>
@@ -144,8 +146,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingLeft: 8,
-    paddingRight: 8,
-    backgroundColor: 'rgba(0,0,0,0.04)'
+    paddingRight: 8
   },
   wrapper: {
     flex: 1,
@@ -155,7 +156,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginRight: 8,
     marginTop: 2,
-    marginBottom: 2
+    marginBottom: 2,
+    backgroundColor: '#FFF'
   },
   fab: {
     position: 'absolute',

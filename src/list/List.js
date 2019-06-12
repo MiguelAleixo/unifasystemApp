@@ -71,7 +71,7 @@ export default class Listagem extends React.Component {
                 onPress={() => console.log('xenes')}
                 key={index}
                 title={user.nome}
-                description={`${user.codigo} - ${user.curso}`}
+                description={`${user.cpf} - ${user.curso}`}
                 left={props => (<Avatar.Image {...props} size={52} source={user.imagem} />)}
                 right={props => <IconButton icon="delete" onPress={() => { this.deleteItem(index) }}
                 />}
