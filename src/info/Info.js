@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Alert, StyleSheet, KeyboardAvoidingView, ScrollView, Picker, AsyncStorage } from 'react-native';
 import navigation from 'react-navigation';
-import { TextInput, Button, HelperText } from 'react-native-paper';
+import { TextInput, Button, List, Avatar, IconButton, FAB, Appbar } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text'
 
 export default class Info extends Component {
@@ -9,40 +9,35 @@ export default class Info extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      nome: '',
-      cpf: '',
-      dataNascimento: '',
-      cidade: '',
-      curso: ''
+      user: [],
+      info: {
+        nome: '',
+        codigo: '',
+        cpf: '',
+        imagem: "require('../assets/image1.jpg')",
+        dataNascimento: '',
+        curso: ''
+      }
     };
   }
 
-  _isCPFValid = () => /[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}/.test(this.state.cpf);
-  _isDateValid = () => /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/.test(this.state.dataNascimento);
 
-  onSubmit = async() => {
-    Alert.alert(JSON.stringify(this.state))
+
+  onSubmit = async () => {
+    this.state.user.push(this.state.info);
+    let dados = this.state.user;
+    console.warn(dados)
     try {
-      // const {produto,quantidade} = this.state;
-      // var p = {produto: produto, quantidade: quantidade};
-      // global.dados.push(this.state);
+      await AsyncStorage.setItem('dados', JSON.stringify(dados));
+      this.props.navigation.navigate('List',{});
 
-      await AsyncStorage.setItem('data', JSON.stringify(this.state));
-      // this.props.navigation.navigate('Consulta',{});
     } catch (e) {
       console.error('Falha ao salvar dados');
     }
   }
 
-  onSubmit() {
-    Alert.alert(JSON.stringify(this.state))
-  }
-
-  render() {
-    // const { navigate } = this.props.navigation;
-
+  renderInfo() {
     return (
-      // <KeyboardAvoidingView style={styles.wrapper}>
       <ScrollView
         style={[styles.container]}
         keyboardShouldPersistTaps={'always'}
@@ -52,72 +47,92 @@ export default class Info extends Component {
         <TextInput
           mode="outlined"
           label="Nome"
-          style={styles.input}
-          value={this.state.nome}
-          onChangeText={nome => this.setState({ nome })}
+          style={styles.inputContainerStyle}
+          value={this.state.info.nome}
+          onChangeText={nome => this.setState({ info: { ...this.state.info, nome: nome } })}
         />
 
-        <View style={styles.inputContainerStyle}>
-          <TextInput
-            mode="outlined"
-            label="CPF"
-            value={this.state.cpf}
-            error={!this._isCPFValid()}
-            onChangeText={cpf => this.setState({ cpf })}
-            render={
-              props =>
-                <TextInputMask
-                  {...props}
-                  type={'cpf'}
-                />
-            }
-          />
-          <HelperText type="error" visible={!this._isCPFValid()}>
-            Digite um CPF válido
-            </HelperText>
-        </View>
+        <TextInput
+          mode="outlined"
+          label="CPF"
+          value={this.state.info.cpf}
+          style={styles.inputContainerStyle}
+          onChangeText={cpf => this.setState({ info: { ...this.state.info, cpf: cpf } })}
+          render={
+            props =>
+              <TextInputMask
+                {...props}
+                type={'cpf'}
+              />
+          }
+        />
 
-        <View style={styles.inputContainerStyle}>
-          <TextInput
-            mode="outlined"
-            label="Data de nascimento"
-            value={this.state.dataNascimento}
-            error={!this._isDateValid()}
-            onChangeText={dataNascimento => this.setState({ dataNascimento })}
-            render={
-              props =>
-                <TextInputMask
-                  {...props}
-                  type={'datetime'}
-                  options={{
-                    format: 'DD/MM/YYYY'
-                  }}
-                />
-            }
-          />
-          <HelperText type="error" visible={!this._isDateValid()}>
-            Digite uma data válida
-            </HelperText>
-        </View>
+
+        <TextInput
+          mode="outlined"
+          label="Data de nascimento"
+          value={this.state.info.dataNascimento}
+          style={styles.inputContainerStyle}
+          onChangeText={dataNascimento => this.setState({ info: { ...this.state.info, dataNascimento: dataNascimento } })}
+          render={
+            props =>
+              <TextInputMask
+                {...props}
+                type={'datetime'}
+                options={{
+                  format: 'DD/MM/YYYY'
+                }}
+              />
+          }
+        />
+
 
         <Picker
-          selectedValue={this.state.curso}
-          style={styles.input}
-          onValueChange={ curso =>
-            this.setState({ curso })
+          selectedValue={this.state.info.curso}
+          style={styles.inputContainerStyle}
+          onValueChange={curso =>
+            this.setState({ info: { ...this.state.info, curso: curso } })
           }>
           <Picker.Item label="Sistemas de informação" value="1" />
           <Picker.Item label="Engenharia de software" value="2" />
           <Picker.Item label="Letras" value="3" />
           <Picker.Item label="Psicologia" value="4" />
         </Picker>
-
-        <Button mode="contained" onPress={this.onSubmit.bind(this)} style={styles.button}>
-          Cadastrar
-        </Button>
       </ScrollView >
-      // {/* </KeyboardAvoidingView> */}
     );
+  }
+
+  render() {
+
+    try {
+      AsyncStorage.getItem('dados').then((value) => {
+        this.setState({ user: JSON.parse(value || '[]') });
+      });
+    } catch (e) {
+      console.error('falha ao ler dados');
+    }
+
+    return (
+      <View style={{ flex: 1 }}>
+        <Appbar.Header style={{ backgroundColor: '#3F51B5' }}>
+          <Appbar.Action icon="menu" />
+          <Appbar.Content
+            title="Lista de alunos"
+          />
+          <Avatar.Image size={40} source={require('../assets/indiano-google.jpg')} />
+        </Appbar.Header>
+
+        <View style={styles.container}>
+          {this.renderInfo()}
+          <FAB
+            style={styles.fab}
+            icon="done"
+            onPress={this.onSubmit.bind(this)}
+          />
+        </View>
+      </View>
+    )
+
   }
 }
 
@@ -142,13 +157,11 @@ const styles = StyleSheet.create({
     marginTop: 2,
     marginBottom: 2
   },
-  input: {
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 2,
-    marginBottom: 26
-  },
-  button: {
-    margin: 8
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#F50057'
   }
 });

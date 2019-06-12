@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, AsyncStorage, StyleSheet } from 'react-native';
+import { Button, View, Text, AsyncStorage, StyleSheet, Alert } from 'react-native';
 import { List, Avatar, IconButton, FAB, Appbar } from 'react-native-paper';
 
 export default class Listagem extends React.Component {
@@ -58,7 +58,7 @@ export default class Listagem extends React.Component {
         users.splice(index, 1);
 
         try {
-            await AsyncStorage.setItem("dados", JSON.stringify(users));
+            await AsyncStorage.setItem('dados', JSON.stringify(users));
         } catch (e) {
             console.error('Falha ao salvar dados');
         }
@@ -80,6 +80,7 @@ export default class Listagem extends React.Component {
     }
 
     render() {
+        //   console.warn(JSON.stringify(this.state))
         try {
             AsyncStorage.getItem('dados').then((value) => {
                 this.setState({ user: JSON.parse(value || '[]') });
