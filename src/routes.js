@@ -7,9 +7,9 @@ import { createAppContainer, createStackNavigator } from 'react-navigation';
 
 const Routes = createAppContainer(
   createStackNavigator({
-    Info: Info,
+    List: List,
     Login: Login,
-    List: List
+    Info: Info,
   },
     {
       headerMode: 'none'
