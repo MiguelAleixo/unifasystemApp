@@ -36,7 +36,7 @@ export default class Login extends Component {
                     mode="outlined"
                     label="Usuário"
                     value={this.state.user}
-                    style={{ marginBottom: 16 }}
+                    style={{ marginBottom: 16, backgroundColor: '#FFF' }}
                     onChangeText={user => this.setState({ user })}
                 />
 
@@ -45,14 +45,14 @@ export default class Login extends Component {
                     label="Senha"
                     secureTextEntry={true}
                     value={this.state.pass}
-                    style={{ marginBottom: 32 }}
+                    style={{ marginBottom: 32, backgroundColor: '#FFF' }}
                     onChangeText={pass => this.setState({ pass })}
                 />
 
                 <Button
                     mode="contained"
                     onPress={() => this.onEnter()}
-                    style={{ marginBottom: 32 }}>
+                    style={{ marginBottom: 32, backgroundColor: '#3F51B5' }}>
                     Entrar
                 </Button>
 
