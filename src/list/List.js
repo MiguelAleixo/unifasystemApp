@@ -1,8 +1,6 @@
 import React from 'react';
 import { Button, View, Text, AsyncStorage, StyleSheet } from 'react-native';
-import { List, Avatar, IconButton } from 'react-native-paper';
-import { Icon } from 'react-native-vector-icons';
-import { FAB } from 'react-native-paper';
+import { List, Avatar, IconButton, FAB, Appbar } from 'react-native-paper';
 
 export default class Listagem extends React.Component {
     constructor(props) {
@@ -15,7 +13,8 @@ export default class Listagem extends React.Component {
                 //     cpf: '111.111.111-11',
                 //     dataNascimento: '15/08/1988',
                 //     cidade: 'Franca',
-                //     curso: 'Engenharia de Software'
+                //     curso: 'Engenharia de Software',
+                //     imagem: require('../assets/image1.jpg')
                 // },
                 // {
                 //     codigo: '2',
@@ -23,7 +22,8 @@ export default class Listagem extends React.Component {
                 //     cpf: '222.222.222-22',
                 //     dataNascimento: '19/10/1987',
                 //     cidade: 'Franca',
-                //     curso: 'Engenharia de Software'
+                //     curso: 'Engenharia de Software',
+                //     imagem: require('../assets/image2.jpg')
                 // },
                 // {
                 //     codigo: '3',
@@ -31,18 +31,26 @@ export default class Listagem extends React.Component {
                 //     cpf: '333.333.333-33',
                 //     dataNascimento: '23/08/1999',
                 //     cidade: 'Franca',
-                //     curso: 'Sistemas de Informação'
+                //     curso: 'Sistemas de Informação',
+                //     imagem: require('../assets/image3.jpg')
                 // },
                 // {
-                //     codigo: '4',
+                //     codigo: '6',
                 //     nome: 'Ciclano Ciclano',
                 //     cpf: '444.444.444-44',
                 //     dataNascimento: '14/08/2001',
                 //     cidade: 'Franca',
-                //     curso: 'Ciência da Computação'
+                //     curso: 'Ciência da Computação',
+                //     imagem: require('../assets/image1.jpg')
                 // }
             ]
         };
+
+        // try {
+        //     AsyncStorage.setItem("dados", JSON.stringify(this.state.user));
+        // } catch (e) {
+        //     console.error('Falha ao salvar dados');
+        // }
     }
 
     async deleteItem(index) {
@@ -50,42 +58,54 @@ export default class Listagem extends React.Component {
         users.splice(index, 1);
 
         try {
-            await AsyncStorage.setItem("dados",JSON.stringify(users));
+            await AsyncStorage.setItem("dados", JSON.stringify(users));
         } catch (e) {
             console.error('Falha ao salvar dados');
         }
-        this.setState({...this.state});
+        this.setState({ ...this.state });
     }
 
     renderList() {
         return this.state.user.map((user, index) => (
             <List.Item
+                onPress={() => console.log('xenes')}
                 key={index}
                 title={user.nome}
                 description={`${user.codigo} - ${user.curso}`}
-                left={props => (<Avatar.Image {...props} size={52} source={require('../assets/indiano-google.jpg')} />)}
-                right={props => <IconButton icon="delete" onPress={() => {this.deleteItem(index)}}/>}
+                left={props => (<Avatar.Image {...props} size={52} source={user.imagem} />)}
+                right={props => <IconButton icon="delete" onPress={() => { this.deleteItem(index) }}
+                />}
             />
         ))
     }
 
     render() {
         try {
-          AsyncStorage.getItem('dados').then((value) => {
-            this.setState({user: JSON.parse(value)});
-          });
+            AsyncStorage.getItem('dados').then((value) => {
+                this.setState({ user: JSON.parse(value || '[]') });
+            });
         } catch (e) {
-          console.error('falha ao ler dados');
+            console.error('falha ao ler dados');
         }
 
         return (
-            <View style={styles.container}>
-                {this.renderList()}
-                <FAB
-                    style={styles.fab}
-                    icon="add"
-                    onPress={() => console.log('Pressed')}
-                />
+            <View style={{ flex: 1 }}>
+                <Appbar.Header style={{backgroundColor: '#3F51B5'}}>
+                    <Appbar.Action icon="menu" />
+                    <Appbar.Content
+                        title="Lista de alunos"
+                    />
+                    <Avatar.Image size={40} source={require('../assets/indiano-google.jpg')} />
+                </Appbar.Header>
+
+                <View style={styles.container}>
+                    {this.renderList()}
+                    <FAB
+                        style={styles.fab}
+                        icon="add"
+                        onPress={() => this.props.navigation.navigate('Info')}
+                    />
+                </View>
             </View>
         );
     }
@@ -94,13 +114,15 @@ export default class Listagem extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 8
+        padding: 8,
+        position: 'relative'
     },
     fab: {
         position: 'absolute',
         margin: 16,
         right: 0,
         bottom: 0,
+        backgroundColor: '#F50057'
     },
 })
 
