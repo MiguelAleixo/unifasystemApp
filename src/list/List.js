@@ -6,6 +6,11 @@ export default class Listagem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            images: [
+                require('../assets/image1.jpg'),
+                require('../assets/image2.jpg'),
+                require('../assets/image3.jpg')
+            ],
             user: [
                 // {
                 //     codigo: '1',
@@ -66,14 +71,18 @@ export default class Listagem extends React.Component {
     }
 
     renderList() {
+        if (!this.state.user.length) {
+            return (<Text style={{ textAlign: 'center' }}>Nenhum aluno encontrado...</Text>)
+        }
+
         return this.state.user.map((user, index) => (
             <List.Item
-                onPress={() => console.log('xenes')}
+                onPress={() => this.props.navigation.navigate('Info', { id: index })}
                 key={index}
                 title={user.nome}
                 description={`${user.cpf} - ${user.curso}`}
-                left={props => (<Avatar.Image {...props} size={52} source={user.imagem} />)}
-                right={props => <IconButton icon="delete" onPress={() => { this.deleteItem(index) }}
+                left={props => (<Avatar.Image {...props} size={52} source={this.state.images[user.imagem]} />)}
+                right={() => <IconButton icon="delete" onPress={() => { this.deleteItem(index) }}
                 />}
             />
         ))
@@ -91,7 +100,7 @@ export default class Listagem extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <Appbar.Header style={{backgroundColor: '#3F51B5'}}>
+                <Appbar.Header style={{ backgroundColor: '#3F51B5' }}>
                     <Appbar.Action icon="menu" />
                     <Appbar.Content
                         title="Lista de alunos"
@@ -115,12 +124,11 @@ export default class Listagem extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 8,
         position: 'relative'
     },
     fab: {
         position: 'absolute',
-        margin: 16,
+        margin: 8,
         right: 0,
         bottom: 0,
         backgroundColor: '#F50057'

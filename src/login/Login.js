@@ -38,6 +38,7 @@ export default class Login extends Component {
                     value={this.state.user}
                     style={{ marginBottom: 16, backgroundColor: '#FFF' }}
                     onChangeText={user => this.setState({ user })}
+                    underlineColor="black"
                 />
 
                 <TextInput
